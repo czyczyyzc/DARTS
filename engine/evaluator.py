@@ -1,6 +1,7 @@
 from __future__ import print_function, absolute_import
 
 import time
+import pickle
 import torch
 import torch.nn.functional as F
 import torch.distributed as dist
@@ -11,10 +12,9 @@ from modeling.metrics.classification import accuracy
 
 
 class Evaluator(object):
-    def __init__(self, model, print_freq=20, distributed=False):
+    def __init__(self, model, distributed=False):
         super(Evaluator, self).__init__()
         self.model       = model
-        self.print_freq  = print_freq
         self.distributed = distributed
 
     def evaluate(self, data_loader):
@@ -36,15 +36,13 @@ class Evaluator(object):
                 logits = self.model(data)
                 loss = F.cross_entropy(logits, target)
                 prec1, prec5 = accuracy(logits, target, topk=(1, 5))
-
                 if self.distributed:
                     temp = torch.stack([loss, prec1, prec5])
                     dist.reduce(temp, dst=0)
                     if dist.get_rank() == 0:
                         temp /= dist.get_world_size()
                     loss, prec1, prec5 = temp
-
-                loss_avg.update(loss, target.size(0))
+                loss_avg.update(loss,  target.size(0))
                 top1_avg.update(prec1, target.size(0))
                 top5_avg.update(prec5, target.size(0))
 

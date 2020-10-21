@@ -73,7 +73,7 @@ def cifar_transform(train=True, **kwargs):
             # transforms.RandomRotation(10),
             transforms.ToTensor(),
             transforms.Normalize(CIFAR_MEAN, CIFAR_STD),
-            # Cutout(16)
+            Cutout(16),
         ])
     else:
         data_transforms = transforms.Compose([
@@ -90,7 +90,7 @@ def tiny_imagenet_transform(train=True, **kwargs):
         data_transforms = transforms.Compose([
             transforms.RandomCrop(64, padding=8),
             transforms.RandomHorizontalFlip(),
-            transforms.RandomRotation(10),
+            # transforms.RandomRotation(10),
             transforms.ToTensor(),
             transforms.Normalize(IMAGENET_MEAN, IMAGENET_STD)
         ])
@@ -109,8 +109,8 @@ def imagenet_transform(train=True, **kwargs):
         data_transforms = transforms.Compose([
             transforms.RandomResizedCrop(224),
             transforms.RandomHorizontalFlip(),
-            transforms.RandomRotation(10),
-            # ColorJitter(),
+            # transforms.RandomRotation(10),
+            transforms.ColorJitter(brightness=0.4, contrast=0.4, saturation=0.4, hue=0.2),
             transforms.ToTensor(),
             transforms.Normalize(IMAGENET_MEAN, IMAGENET_STD)
         ])

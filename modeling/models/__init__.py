@@ -1,9 +1,12 @@
 from __future__ import print_function, absolute_import
 
-from modeling.models.network import Network
+from modeling.models.cnn import CNN_CIFAR, CNN_ImageNet
+from modeling.models.cnn_search import CNN_Search
 
 __factory = {
-    'cnn': Network,
+    'cnn_cifar': CNN_CIFAR,
+    'cnn_search': CNN_Search,
+    'cnn_imagenet': CNN_ImageNet,
 }
 
 

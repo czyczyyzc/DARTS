@@ -2,7 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b4eca53c-c49e-4198-8cbf-12528860cd4a" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/transforms.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/transforms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/evaluator.py" beforeDir="false" afterPath="$PROJECT_DIR$/engine/evaluator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/trainer.py" beforeDir="false" afterPath="$PROJECT_DIR$/engine/trainer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modeling/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/modeling/models/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modeling/models/operations.py" beforeDir="false" afterPath="$PROJECT_DIR$/modeling/models/operations.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,7 +40,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1603177673539</updated>
-      <workItem from="1603177675138" duration="418000" />
+      <workItem from="1603177675138" duration="764000" />
+      <workItem from="1603290839089" duration="151000" />
     </task>
     <servers />
   </component>
