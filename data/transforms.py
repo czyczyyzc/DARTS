@@ -63,7 +63,7 @@ def mnist_transform(train=True, **kwargs):
     return data_transforms
 
 
-def cifar_transform(train=True, **kwargs):
+def cifar_transform(train=True, cutout=False, **kwargs):
     CIFAR_MEAN = [0.49139968, 0.48215827, 0.44653124]
     CIFAR_STD  = [0.24703233, 0.24348505, 0.26158768]
     if train:
@@ -73,8 +73,9 @@ def cifar_transform(train=True, **kwargs):
             # transforms.RandomRotation(10),
             transforms.ToTensor(),
             transforms.Normalize(CIFAR_MEAN, CIFAR_STD),
-            Cutout(16),
         ])
+        if cutout:
+            data_transforms.transforms.append(Cutout(16))
     else:
         data_transforms = transforms.Compose([
             transforms.ToTensor(),

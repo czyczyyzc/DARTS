@@ -58,6 +58,7 @@ class CNN_Search(nn.Module):
         self._layers = layers
         self._steps = steps
         self._multiplier = multiplier
+        self._norm_layer = norm_layer
 
         C_curr = stem_multiplier * init_channels
         self.stem = nn.Sequential(
@@ -84,6 +85,12 @@ class CNN_Search(nn.Module):
         self._initialize_alphas()
         self._netw_parameters = list(self.stem.parameters()) + list(self.cells.parameters()) + \
                                 list(self.classifier.parameters())
+
+    def new(self):
+        model_new = CNN_Search(self._num_classes, self._C, self._layers, norm_layer=self._norm_layer)
+        for x, y in zip(model_new.arch_parameters(), self.arch_parameters()):
+            x.data.copy_(y.data)
+        return model_new
 
     def forward(self, data):
         s0 = s1 = self.stem(data)

@@ -8,13 +8,13 @@ import argparse
 import torch
 import torch.optim
 import torch.nn as nn
-import torch.nn.functional as F
 import torch.utils.data
 import torch.utils.data.distributed
 import torch.distributed as dist
 import torch.backends.cudnn as cudnn
 import numpy as np
 from modeling import models
+from modeling.models.genotypes import DARTS
 from data import datasets, transforms
 from engine.trainer import Trainer
 from engine.evaluator import Evaluator
@@ -25,12 +25,13 @@ from utils.serialization import load_checkpoint, save_checkpoint
 
 def argument_parser():
     parser = argparse.ArgumentParser(description='NAS with Pytorch Implementation')
-    parser.add_argument('--gpu-ids', type=str, default='0,1')
+    parser.add_argument('--gpu-ids', type=str, default='0')
     # data
     parser.add_argument('-d', '--dataset', type=str, default='cifar10', choices=datasets.names())
-    parser.add_argument('-j', '--num-workers', type=int, default=2)
+    parser.add_argument('-j', '--num-workers', type=int, default=4)
     parser.add_argument('-b', '--batch-size', type=int, default=96)
     parser.add_argument('--num-epochs', type=int, default=600)
+    parser.add_argument('--cutout', action='store_true', default=False, help='use cutout')
     parser.add_argument('--label_smooth', type=float, default=0.1, help='label smoothing')
     # model
     parser.add_argument('-a', '--arch', type=str, default='cnn_cifar', choices=models.names())
@@ -52,7 +53,7 @@ def argument_parser():
     # misc
     working_dir = os.path.dirname(os.path.abspath(__file__))
     parser.add_argument('--data-dir', type=str, metavar='PATH', default=os.path.join(working_dir, 'temp', 'data'))
-    parser.add_argument('--logs-dir', type=str, metavar='PATH', default=os.path.join(working_dir, 'temp', 'logs'))
+    parser.add_argument('--logs-dir', type=str, metavar='PATH', default=os.path.join(working_dir, 'temp', 'logs1'))
     # distributed
     parser.add_argument('--local_rank', type=int, default=0)
     parser.add_argument('--net-card', type=str, default='', help="Name of the network card.")
@@ -64,7 +65,6 @@ def main(args):
     if args.net_card:
         os.environ['GLOO_SOCKET_IFNAME'] = args.net_card
         os.environ['NCCL_SOCKET_IFNAME'] = args.net_card
-    args.gpu_ids = list(map(int, args.gpu_ids.split(',')))
 
     random.seed(args.seed)
     np.random.seed(args.seed)
@@ -87,7 +87,7 @@ def main(args):
         dist.barrier()
 
     # Create dataloaders
-    train_transforms = transforms.create(args.dataset, train=True)
+    train_transforms = transforms.create(args.dataset, train=True, cutout=args.cutout)
     test_transforms  = transforms.create(args.dataset, train=False)
 
     data_root = os.path.join(args.data_dir, args.dataset)
@@ -110,6 +110,8 @@ def main(args):
         genotype = pickle.loads(file.read())
         if not args.distributed or dist.get_rank() == 0:
             print(genotype)
+    # genotype = DARTS
+    print(genotype)
     norm_layer = nn.SyncBatchNorm if args.distributed else nn.BatchNorm2d
     model = models.create(args.arch, num_classes=len(train_dataset.classes), init_channels=args.init_channels,
                           layers=args.layers, genotype=genotype, auxiliary=args.auxiliary, drop_prob=args.drop_prob,
@@ -118,7 +120,7 @@ def main(args):
         model = nn.parallel.DistributedDataParallel(
             model.cuda(), device_ids=[args.local_rank], output_device=args.local_rank)  # find_unused_parameters=True
     else:
-        model = nn.DataParallel(model, device_ids=args.gpu_ids, output_device=args.gpu_ids[0]).cuda()
+        model = nn.DataParallel(model).cuda()
 
     if not args.distributed or args.local_rank == 0:
         print("param size {:f} MB".format(count_parameters_in_MB(model)))
@@ -169,7 +171,7 @@ def main(args):
         # is_best = prec1 > best_prec1
         # best_prec1 = max(prec1, best_prec1)
         is_best = True
-        if not args.distributed or dist.get_rank() == 0:
+        if not args.distributed or args.local_rank == 0:
             lr = scheduler.get_lr()[0]
             print('epoch {:d}, lr {:.6f}'.format(epoch, lr))
             save_checkpoint({

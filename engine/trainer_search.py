@@ -2,6 +2,7 @@ from __future__ import print_function, absolute_import
 
 import time
 import copy
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -24,6 +25,8 @@ class Trainer(object):
         self.arch_optimizer = arch_optimizer
         self.unrolled       = unrolled
         self.distributed    = distributed
+        self.netw_momentum  = netw_optimizer.param_groups[0]['momentum']
+        self.netw_weight_decay = netw_optimizer.param_groups[0]['weight_decay']
 
     def _backup(self):
         backup = [], []
@@ -52,9 +55,8 @@ class Trainer(object):
         self.netw_optimizer.zero_grad()
         self.arch_optimizer.zero_grad()
         loss.backward()
-
-        dalpha = [v.grad.data for v in self.model.module.arch_parameters()]
-        dparam = [v.grad.data for v in self.model.module.netw_parameters()]
+        dalpha = [copy.deepcopy(v.grad.data) for v in self.model.module.arch_parameters()]
+        dparam = [copy.deepcopy(v.grad.data) for v in self.model.module.netw_parameters()]
 
         R = r / _concat(dparam).norm()
         params_p, params_n = [], []
@@ -66,35 +68,99 @@ class Trainer(object):
         loss = F.cross_entropy(self.model(data_train), target_train)
         self.arch_optimizer.zero_grad()
         loss.backward()
-        grads_p = [v.grad.data for v in self.model.module.arch_parameters()]
+        grads_p = [copy.deepcopy(v.grad.data) for v in self.model.module.arch_parameters()]
 
         self._restore((params_n,))
         loss = F.cross_entropy(self.model(data_train), target_train)
         self.arch_optimizer.zero_grad()
         loss.backward()
-        grads_n = [v.grad.data for v in self.model.module.arch_parameters()]
-        grads_a = [(x - y).div_(2 * R) for x, y in zip(grads_p, grads_n)]
+        grads_n = [copy.deepcopy(v.grad.data) for v in self.model.module.arch_parameters()]
 
+        grads_a = [(x - y).div_(2 * R) for x, y in zip(grads_p, grads_n)]
         lr = self.netw_optimizer.param_groups[0]['lr']
         for g, v in zip(dalpha, grads_a):
             g.sub_(v, alpha=lr)
+
         for v, g in zip(self.model.module.arch_parameters(), dalpha):
-            v.grad.data.copy_(g)
-        self.arch_optimizer.step()
+            if v.grad is None:
+                v.grad = g
+            else:
+                v.grad.data.copy_(g)
         self._restore(backup)
 
+    # def _compute_unrolled_model(self, data, target):
+    #     eta = self.netw_optimizer.param_groups[0]['lr']
+    #     loss = F.cross_entropy(self.model(data), target)
+    #     theta = _concat(self.model.module.netw_parameters()).data
+    #     try:
+    #         moment = _concat(self.netw_optimizer.state[v]['momentum_buffer'] for v in self.model.module.netw_parameters()).mul_(self.netw_momentum)
+    #     except:
+    #         moment = torch.zeros_like(theta)
+    #     dtheta = _concat(torch.autograd.grad(loss, self.model.module.netw_parameters())).data + self.netw_weight_decay * theta
+    #     unrolled_model = self._construct_model_from_theta(theta.sub(moment + dtheta, alpha=eta))
+    #     return unrolled_model
+    #
+    # def _construct_model_from_theta(self, theta):
+    #     model_new = self.model.module.new()
+    #     offset = 0
+    #     for v in self.model.module.netw_parameters():
+    #         v_length = np.prod(v.size())
+    #         v.data.copy_(theta[offset: offset+v_length].view(v.size()))
+    #         offset += v_length
+    #     assert offset == len(theta)
+    #     if self.distributed:
+    #         model_new = nn.parallel.DistributedDataParallel(
+    #             model_new.cuda(), device_ids=[dist.get_rank()], output_device=dist.get_rank())
+    #     else:
+    #         model_new = nn.DataParallel(model_new).cuda()
+    #     return model_new
+    #
+    # def _hessian_vector_product(self, vector, data, target, r=1e-2):
+    #     R = r / _concat(vector).norm()
+    #     for p, v in zip(self.model.module.netw_parameters(), vector):
+    #         p.data.add_(v, alpha=R)
+    #     loss = F.cross_entropy(self.model(data), target)
+    #     grads_p = torch.autograd.grad(loss, self.model.module.arch_parameters())
+    #
+    #     for p, v in zip(self.model.module.netw_parameters(), vector):
+    #         p.data.sub_(v, alpha=2*R)
+    #     loss = F.cross_entropy(self.model(data), target)
+    #     grads_n = torch.autograd.grad(loss, self.model.module.arch_parameters())
+    #
+    #     for p, v in zip(self.model.module.netw_parameters(), vector):
+    #         p.data.add_(v, alpha=R)
+    #     return [(x-y).div_(2*R) for x, y in zip(grads_p, grads_n)]
+    #
+    # def _backward_step_unrolled(self, data_train, target_train, data_valid, target_valid):
+    #     unrolled_model = self._compute_unrolled_model(data_train, target_train)
+    #     unrolled_loss = F.cross_entropy(unrolled_model(data_valid), target_valid)
+    #
+    #     unrolled_loss.backward()
+    #     dalpha = [v.grad for v in unrolled_model.module.arch_parameters()]
+    #     vector = [v.grad.data for v in unrolled_model.module.netw_parameters()]
+    #     implicit_grads = self._hessian_vector_product(vector, data_train, target_train)
+    #
+    #     eta = self.netw_optimizer.param_groups[0]['lr']
+    #     for g, ig in zip(dalpha, implicit_grads):
+    #         g.data.sub_(ig.data, alpha=eta)
+    #
+    #     for v, g in zip(self.model.module.arch_parameters(), dalpha):
+    #         if v.grad is None:
+    #             v.grad = g.data
+    #         else:
+    #             v.grad.data.copy_(g.data)
+
     def _backward_step(self, data_valid, target_valid):
-        logits = self.model(data_valid)
-        loss = F.cross_entropy(logits, target_valid)
-        self.arch_optimizer.zero_grad()
+        loss = F.cross_entropy(self.model(data_valid), target_valid)
         loss.backward()
-        self.arch_optimizer.step()
 
     def _step(self, data_train, target_train, data_valid, target_valid):
+        self.arch_optimizer.zero_grad()
         if self.unrolled:
             self._backward_step_unrolled(data_train, target_train, data_valid, target_valid)
         else:
             self._backward_step(data_valid, target_valid)
+        self.arch_optimizer.step()
 
     def train(self, train_loader, valid_loader, epoch):
         self.model.train()

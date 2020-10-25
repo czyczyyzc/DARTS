@@ -130,8 +130,7 @@ class CNN_CIFAR(nn.Module):
             if i == 2 * layers // 3:
                 C_to_auxiliary = C_prev
 
-        if auxiliary:
-            self.auxiliary_head = AuxiliaryHeadCIFAR(C_to_auxiliary, num_classes, norm_layer=norm_layer)
+        self.auxiliary_head = AuxiliaryHeadCIFAR(C_to_auxiliary, num_classes, norm_layer=norm_layer)
         self.global_pooling = nn.AdaptiveAvgPool2d(1)
         self.classifier = nn.Linear(C_prev, num_classes)
 
@@ -145,7 +144,10 @@ class CNN_CIFAR(nn.Module):
                     logits_aux = self.auxiliary_head(s1)
         out = self.global_pooling(s1)
         logits = self.classifier(out.view(out.size(0), -1))
-        return logits, logits_aux
+        if self.training:
+            return logits, logits_aux
+        else:
+            return logits
 
 
 class CNN_ImageNet(nn.Module):

@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b4eca53c-c49e-4198-8cbf-12528860cd4a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-    </list>
+    <list default="true" id="312b1104-8898-4edb-9716-ef9efe72d8af" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
-  <component name="ProjectId" id="1j8FB8wNlaURUdeb7pBSAm6FaJf" />
+  <component name="JupyterTrust" id="5f75d3ce-eb7e-466a-a7b7-23940d4d9722" />
+  <component name="ProjectId" id="1ironueLbwsXBI9h1eMX9CRpg0I" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -22,21 +24,70 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../NAS" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../untitled" />
+    <property name="settings.editor.selected.configurable" value="Errors" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\project\NAS\modeling\models" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\project\NAS\modeling\models\old" />
+      <recent name="E:\project\NAS" />
+      <recent name="E:\project\NAS\engine\solver" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="DRCL" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.test" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="b4eca53c-c49e-4198-8cbf-12528860cd4a" name="Default Changelist" comment="" />
-      <created>1603177673539</created>
+      <changelist id="312b1104-8898-4edb-9716-ef9efe72d8af" name="Default Changelist" comment="" />
+      <created>1602675241109</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1603177673539</updated>
-      <workItem from="1603177675138" duration="764000" />
-      <workItem from="1603290839089" duration="556000" />
-      <workItem from="1603297970114" duration="983000" />
+      <updated>1602675241109</updated>
+      <workItem from="1602675242517" duration="3445000" />
+      <workItem from="1602679948543" duration="3256000" />
+      <workItem from="1602683843461" duration="132000" />
+      <workItem from="1602738816167" duration="43548000" />
+      <workItem from="1602931384891" duration="55677000" />
+      <workItem from="1603074120329" duration="36608000" />
+      <workItem from="1603297988026" duration="1184000" />
+      <workItem from="1603332469827" duration="24065000" />
+      <workItem from="1603429845786" duration="11062000" />
+      <workItem from="1603464061958" duration="7447000" />
+      <workItem from="1603506021397" duration="7030000" />
+      <workItem from="1603516266528" duration="7723000" />
     </task>
     <servers />
   </component>
@@ -44,9 +95,72 @@
     <option name="version" value="2" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="463" y="119" key="FileChooserDialogImpl" timestamp="1603297983954">
+    <state x="275" y="22" key="#Deployment" timestamp="1602739063429">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="463" y="119" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1603297983954" />
+    <state x="275" y="22" key="#Deployment/0.0.1366.728@0.0.1366.728" timestamp="1602739063429" />
+    <state x="328" y="39" key="#Options" timestamp="1602739070923">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="328" y="39" key="#Options/0.0.1366.728@0.0.1366.728" timestamp="1602739070923" />
+    <state x="413" y="110" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1602746892917">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="413" y="110" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1602746892917" />
+    <state x="92" y="92" width="1182" height="544" key="DirDiffDialog" timestamp="1602739253287">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="92" y="92" width="1182" height="544" key="DirDiffDialog/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1602739253287" />
+    <state x="92" y="92" width="1182" height="544" key="DirDiffDialog/0.0.1366.728@0.0.1366.728" timestamp="1602739095783" />
+    <state x="463" y="119" key="FileChooserDialogImpl" timestamp="1603557215548">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="463" y="119" key="FileChooserDialogImpl/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1603506969679" />
+    <state x="2017" y="170" key="FileChooserDialogImpl/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1603444443419" />
+    <state x="463" y="119" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1603557215548" />
+    <state width="661" height="179" key="GridCell.Tab.0.bottom" timestamp="1602912894793">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="661" height="179" key="GridCell.Tab.0.bottom/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1602854541762" />
+    <state width="661" height="179" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1602912894793" />
+    <state width="661" height="179" key="GridCell.Tab.0.center" timestamp="1602912894793">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="661" height="179" key="GridCell.Tab.0.center/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1602854541762" />
+    <state width="661" height="179" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1602912894793" />
+    <state width="661" height="179" key="GridCell.Tab.0.left" timestamp="1602912894790">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="661" height="179" key="GridCell.Tab.0.left/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1602854541761" />
+    <state width="661" height="179" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1602912894790" />
+    <state width="661" height="179" key="GridCell.Tab.0.right" timestamp="1602912894793">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="661" height="179" key="GridCell.Tab.0.right/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1602854541762" />
+    <state width="661" height="179" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1602912894793" />
+    <state x="184" y="8" key="SettingsEditor" timestamp="1603282261788">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="184" y="8" key="SettingsEditor/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1603282261788" />
+    <state x="184" y="8" key="SettingsEditor/0.0.1366.728@0.0.1366.728" timestamp="1603074268868" />
+    <state x="293" y="0" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1602744140062">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="293" y="0" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1602744140062" />
+    <state x="474" y="248" key="com.jetbrains.plugins.remotesdk.ui.RemoteMappingsConfiguration" timestamp="1602738941548">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="474" y="248" key="com.jetbrains.plugins.remotesdk.ui.RemoteMappingsConfiguration/0.0.1366.728@0.0.1366.728" timestamp="1602738941548" />
+    <state x="1628" y="83" width="1025" height="715" maximized="true" key="dock-window-1" timestamp="1603367382143">
+      <screen x="1366" y="0" width="1920" height="1040" />
+    </state>
+    <state x="1628" y="83" width="1025" height="715" maximized="true" key="dock-window-1/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1603367382143" />
+    <state x="574" y="94" key="ftp.server.browser" timestamp="1602738999509">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="574" y="94" key="ftp.server.browser/0.0.1366.728@0.0.1366.728" timestamp="1602738999509" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/NAS$test.coverage" NAME="test Coverage Results" MODIFIED="1602854495168" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

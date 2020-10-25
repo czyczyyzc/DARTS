@@ -29,10 +29,11 @@ def argument_parser():
     parser.add_argument('--gpu-ids', type=str, default='0')
     # data
     parser.add_argument('-d', '--dataset', type=str, default='cifar10', choices=datasets.names())
-    parser.add_argument('-j', '--num-workers', type=int, default=1)
+    parser.add_argument('-j', '--num-workers', type=int, default=0)
     parser.add_argument('-b', '--batch-size', type=int, default=64)
     parser.add_argument('--num-epochs', type=int, default=50)
     parser.add_argument('--train-portion', type=float, default=0.5)
+    parser.add_argument('--cutout', action='store_true', default=False, help='use cutout')
     # model
     parser.add_argument('-a', '--arch', type=str, default='cnn_search', choices=models.names())
     parser.add_argument('--init-channels', type=int, default=16, help="number of initial channels")
@@ -64,7 +65,6 @@ def main(args):
     if args.net_card:
         os.environ['GLOO_SOCKET_IFNAME'] = args.net_card
         os.environ['NCCL_SOCKET_IFNAME'] = args.net_card
-    args.gpu_ids = list(map(int, args.gpu_ids.split(',')))
 
     random.seed(args.seed)
     np.random.seed(args.seed)
@@ -87,7 +87,7 @@ def main(args):
         dist.barrier()
 
     # Create dataloaders
-    train_transforms = transforms.create(args.dataset, train=True)
+    train_transforms = transforms.create(args.dataset, train=True, cutout=args.cutout)
     test_transforms  = transforms.create(args.dataset, train=False)
 
     data_root = os.path.join(args.data_dir, args.dataset)
@@ -120,7 +120,7 @@ def main(args):
         model = nn.parallel.DistributedDataParallel(
             model.cuda(), device_ids=[args.local_rank], output_device=args.local_rank)  # find_unused_parameters=True
     else:
-        model = nn.DataParallel(model, device_ids=args.gpu_ids, output_device=args.gpu_ids[0]).cuda()
+        model = nn.DataParallel(model).cuda()
 
     if not args.distributed or args.local_rank == 0:
         print("param size {:f} MB".format(count_parameters_in_MB(model)))
@@ -173,17 +173,16 @@ def main(args):
         # is_best = prec1 > best_prec1
         # best_prec1 = max(prec1, best_prec1)
         is_best = True
-        if not args.distributed or dist.get_rank() == 0:
+        if not args.distributed or args.local_rank == 0:
             lr = netw_scheduler.get_lr()[0]
             print('epoch {:d}, lr {:.6f}'.format(epoch, lr))
-
             genotype = model.module.genotype()
             print(genotype)
-            print(F.softmax(model.module.alphas_normal, dim=-1))
-            print(F.softmax(model.module.alphas_reduce, dim=-1))
             with open(os.path.join(args.logs_dir, 'genotype.pkl'), 'wb') as file:
                 file.write(pickle.dumps(genotype))
-
+            with torch.no_grad():
+                print(F.softmax(model.module.alphas_normal, dim=-1))
+                print(F.softmax(model.module.alphas_reduce, dim=-1))
             save_checkpoint({
                 'state_dict': model.module.state_dict(),
                 'netw_optimizer': netw_optimizer.state_dict(),
