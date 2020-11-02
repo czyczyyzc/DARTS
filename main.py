@@ -53,7 +53,7 @@ def argument_parser():
     # misc
     working_dir = os.path.dirname(os.path.abspath(__file__))
     parser.add_argument('--data-dir', type=str, metavar='PATH', default=os.path.join(working_dir, 'temp', 'data'))
-    parser.add_argument('--logs-dir', type=str, metavar='PATH', default=os.path.join(working_dir, 'temp', 'logs1'))
+    parser.add_argument('--logs-dir', type=str, metavar='PATH', default=os.path.join(working_dir, 'temp', 'logs'))
     # distributed
     parser.add_argument('--local_rank', type=int, default=0)
     parser.add_argument('--net-card', type=str, default='', help="Name of the network card.")
@@ -111,7 +111,7 @@ def main(args):
         if not args.distributed or dist.get_rank() == 0:
             print(genotype)
     # genotype = DARTS
-    print(genotype)
+    # print(genotype)
     norm_layer = nn.SyncBatchNorm if args.distributed else nn.BatchNorm2d
     model = models.create(args.arch, num_classes=len(train_dataset.classes), init_channels=args.init_channels,
                           layers=args.layers, genotype=genotype, auxiliary=args.auxiliary, drop_prob=args.drop_prob,

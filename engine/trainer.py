@@ -11,10 +11,6 @@ from utils.meters import AverageMeter
 from modeling.metrics.classification import accuracy
 
 
-def _concat(xs):
-    return torch.cat([x.view(-1) for x in xs])
-
-
 class Trainer(object):
     def __init__(self, model, optimizer, auxiliary_weight=0, distributed=False):
         super(Trainer, self).__init__()

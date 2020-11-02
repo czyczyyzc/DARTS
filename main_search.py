@@ -29,7 +29,7 @@ def argument_parser():
     parser.add_argument('--gpu-ids', type=str, default='0')
     # data
     parser.add_argument('-d', '--dataset', type=str, default='cifar10', choices=datasets.names())
-    parser.add_argument('-j', '--num-workers', type=int, default=0)
+    parser.add_argument('-j', '--num-workers', type=int, default=2)
     parser.add_argument('-b', '--batch-size', type=int, default=64)
     parser.add_argument('--num-epochs', type=int, default=50)
     parser.add_argument('--train-portion', type=float, default=0.5)

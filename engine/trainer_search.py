@@ -2,7 +2,6 @@ from __future__ import print_function, absolute_import
 
 import time
 import copy
-import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -103,7 +102,7 @@ class Trainer(object):
     # def _construct_model_from_theta(self, theta):
     #     model_new = self.model.module.new()
     #     offset = 0
-    #     for v in self.model.module.netw_parameters():
+    #     for v in model_new.netw_parameters():
     #         v_length = np.prod(v.size())
     #         v.data.copy_(theta[offset: offset+v_length].view(v.size()))
     #         offset += v_length
@@ -129,7 +128,7 @@ class Trainer(object):
     #
     #     for p, v in zip(self.model.module.netw_parameters(), vector):
     #         p.data.add_(v, alpha=R)
-    #     return [(x-y).div_(2*R) for x, y in zip(grads_p, grads_n)]
+    #     return [(x - y).div_(2 * R) for x, y in zip(grads_p, grads_n)]
     #
     # def _backward_step_unrolled(self, data_train, target_train, data_valid, target_valid):
     #     unrolled_model = self._compute_unrolled_model(data_train, target_train)
@@ -174,11 +173,12 @@ class Trainer(object):
 
         bar = Bar('Processing', max=len(train_loader)) if not self.distributed or dist.get_rank() == 0 else None
 
+        valid_queue = iter(valid_loader)
         for i, (data_train, target_train) in enumerate(train_loader):
             data_time.update(time.time() - end)
 
             data_train, target_train = data_train.cuda(), target_train.cuda()
-            data_valid, target_valid = next(iter(valid_loader))
+            data_valid, target_valid = next(valid_queue)
             data_valid, target_valid = data_valid.cuda(), target_valid.cuda()
 
             self._step(data_train, target_train, data_valid, target_valid)

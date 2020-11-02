@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="312b1104-8898-4edb-9716-ef9efe72d8af" name="Default Changelist" comment="" />
+    <list default="true" id="312b1104-8898-4edb-9716-ef9efe72d8af" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,6 +15,9 @@
         <option value="Python Script" />
       </list>
     </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="JupyterTrust" id="5f75d3ce-eb7e-466a-a7b7-23940d4d9722" />
   <component name="ProjectId" id="1ironueLbwsXBI9h1eMX9CRpg0I" />
@@ -88,6 +93,7 @@
       <workItem from="1603464061958" duration="7447000" />
       <workItem from="1603506021397" duration="7030000" />
       <workItem from="1603516266528" duration="7723000" />
+      <workItem from="1603614462044" duration="6682000" />
     </task>
     <servers />
   </component>
