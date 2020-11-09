@@ -19,7 +19,6 @@ from data import datasets, transforms
 from data.samplers import SubsetDistributedSampler
 from engine.trainer_search import Trainer
 from engine.evaluator import Evaluator
-from utils.meters import count_parameters_in_MB
 from utils.logging import Logger
 from utils.serialization import load_checkpoint, save_checkpoint
 
@@ -123,7 +122,8 @@ def main(args):
         model = nn.DataParallel(model).cuda()
 
     if not args.distributed or args.local_rank == 0:
-        print("param size {:f} MB".format(count_parameters_in_MB(model)))
+        n_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
+        print('number of params:', n_parameters)
 
     # Criterion
     # criterion = nn.CrossEntropyLoss().cuda()

@@ -18,7 +18,6 @@ from modeling.models.genotypes import DARTS
 from data import datasets, transforms
 from engine.trainer import Trainer
 from engine.evaluator import Evaluator
-from utils.meters import count_parameters_in_MB
 from utils.logging import Logger
 from utils.serialization import load_checkpoint, save_checkpoint
 
@@ -110,8 +109,8 @@ def main(args):
         genotype = pickle.loads(file.read())
         if not args.distributed or dist.get_rank() == 0:
             print(genotype)
-    # genotype = DARTS
-    # print(genotype)
+    genotype = DARTS
+    print(genotype)
     norm_layer = nn.SyncBatchNorm if args.distributed else nn.BatchNorm2d
     model = models.create(args.arch, num_classes=len(train_dataset.classes), init_channels=args.init_channels,
                           layers=args.layers, genotype=genotype, auxiliary=args.auxiliary, drop_prob=args.drop_prob,
@@ -123,8 +122,8 @@ def main(args):
         model = nn.DataParallel(model).cuda()
 
     if not args.distributed or args.local_rank == 0:
-        print("param size {:f} MB".format(count_parameters_in_MB(model)))
-
+        n_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
+        print('number of params:', n_parameters)
     # Criterion
     # criterion = nn.CrossEntropyLoss().cuda()
 

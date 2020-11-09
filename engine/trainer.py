@@ -51,6 +51,7 @@ class Trainer(object):
                 prec1, prec5 = accuracy(logits, target, topk=(1, 5))
                 if self.distributed:
                     temp = torch.stack([loss, prec1, prec5])
+                    dist.barrier()
                     dist.reduce(temp, dst=0)
                     if dist.get_rank() == 0:
                         temp /= dist.get_world_size()
