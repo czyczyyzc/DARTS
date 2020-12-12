@@ -105,10 +105,10 @@ def main(args):
         test_dataset, batch_size=args.batch_size, num_workers=args.num_workers, pin_memory=True)
 
     # Create model
-    with open(os.path.join(args.logs_dir, 'genotype.pkl'), 'rb') as file:
-        genotype = pickle.loads(file.read())
-        if not args.distributed or dist.get_rank() == 0:
-            print(genotype)
+    # with open(os.path.join(args.logs_dir, 'genotype.pkl'), 'rb') as file:
+    #     genotype = pickle.loads(file.read())
+    #     if not args.distributed or dist.get_rank() == 0:
+    #         print(genotype)
     genotype = DARTS
     print(genotype)
     norm_layer = nn.SyncBatchNorm if args.distributed else nn.BatchNorm2d
